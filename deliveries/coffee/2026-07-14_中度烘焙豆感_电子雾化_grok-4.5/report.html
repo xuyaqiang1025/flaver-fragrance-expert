@@ -1,0 +1,476 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中度烘焙咖啡豆感 · 配方报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #F5F0EB; color: #3E2723; line-height: 1.7; font-size: 14px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.report-header { background: linear-gradient(135deg, #3E2723 0%, #6F4E37 50%, #8B6F47 100%); color: #FAF6F1; border-radius: 16px; padding: 40px 36px; margin-bottom: 24px; position: relative; overflow: hidden; }
+.report-header::after { content: ''; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(212,165,116,0.1); }
+.report-header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 1px; }
+.report-header .subtitle { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
+.report-header .meta-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+.report-header .meta-tag { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); padding: 4px 14px; border-radius: 20px; font-size: 12px; }
+.section { background: #FFFFFF; border-radius: 14px; padding: 28px 30px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(62,39,35,0.06); border: 1px solid #EDE4DA; }
+.section-title { font-size: 20px; font-weight: 700; color: #3E2723; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #E0D5C8; display: flex; align-items: center; gap: 10px; }
+.section-title .icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #6F4E37, #8B6F47); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+.subsection-title { font-size: 16px; font-weight: 600; color: #6F4E37; margin: 20px 0 12px; padding-left: 12px; border-left: 4px solid #D4A574; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+th { background: #F5EDE3; color: #3E2723; font-weight: 600; padding: 10px 8px; text-align: left; border-bottom: 2px solid #D4A574; white-space: nowrap; }
+td { padding: 8px; border-bottom: 1px solid #EDE4DA; color: #5D4037; }
+tr:hover td { background: #FAF6F1; }
+.tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.tag-ok { background: #E8F5E9; color: #2E7D32; }
+.tag-warn { background: #FFF3E0; color: #E65100; }
+.tag-ban { background: #FFEBEE; color: #C62828; }
+.knowledge-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin: 12px 0; }
+.k-card { background: linear-gradient(135deg, #FFF8F0, #FAF0E6); border: 1px solid #E8D5C0; border-radius: 10px; padding: 14px 16px; position: relative; }
+.k-card .k-id { display: inline-block; background: #6F4E37; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+.k-card .k-title { font-size: 13px; font-weight: 600; color: #3E2723; margin-bottom: 4px; }
+.k-card .k-desc { font-size: 12px; color: #6D4C41; line-height: 1.5; }
+.k-card .k-source { font-size: 11px; color: #A1887F; margin-top: 6px; }
+.param-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.param-card { background: linear-gradient(135deg, #F5EDE3, #FFF); border: 1px solid #E0D5C8; border-radius: 10px; padding: 16px; text-align: center; }
+.param-card .p-label { font-size: 12px; color: #8D6E63; margin-bottom: 6px; }
+.param-card .p-value { font-size: 22px; font-weight: 700; color: #3E2723; }
+.param-card .p-bar { height: 6px; background: #E0D5C8; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.param-card .p-fill { height: 100%; border-radius: 3px; }
+.bar-chart { margin: 16px 0; }
+.bar-row { display: flex; align-items: center; margin-bottom: 10px; gap: 8px; }
+.bar-label { width: 130px; font-size: 12px; color: #5D4037; text-align: right; flex-shrink: 0; font-weight: 600; }
+.bar-track { flex: 1; height: 28px; background: #F5EDE3; border-radius: 6px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; color: #fff; font-weight: 600; }
+.svg-container { display: flex; justify-content: center; margin: 16px 0; overflow-x: auto; }
+.svg-container svg { max-width: 100%; height: auto; }
+.flow-steps { display: flex; flex-wrap: wrap; gap: 0; margin: 16px 0; align-items: stretch; }
+.flow-step { flex: 1; min-width: 180px; background: #FFF; border: 2px solid #D4A574; border-radius: 10px; padding: 14px; position: relative; margin-right: 24px; }
+.flow-step:last-child { margin-right: 0; }
+.flow-step::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #D4A574; font-weight: 700; }
+.flow-step:last-child::after { display: none; }
+.flow-step .step-num { width: 28px; height: 28px; border-radius: 50%; background: #6F4E37; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.flow-step .step-title { font-size: 14px; font-weight: 600; color: #3E2723; margin-bottom: 4px; }
+.flow-step .step-desc { font-size: 12px; color: #6D4C41; line-height: 1.5; }
+.diff-table th { background: #EFEBE9; }
+.diff-table .col-extreme { background: #FFF8E1; }
+.diff-table .col-compliant { background: #E8F5E9; }
+.info-box { background: #F5EDE3; border-left: 4px solid #6F4E37; border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 12px 0; font-size: 13px; color: #5D4037; }
+.info-box.warning { border-left-color: #FF9800; background: #FFF8E1; }
+.info-box.danger { border-left-color: #F44336; background: #FFEBEE; }
+.info-box.success { border-left-color: #4CAF50; background: #E8F5E9; }
+.gradient-bar { display: flex; height: 40px; border-radius: 8px; overflow: hidden; margin: 12px 0; }
+.gradient-segment { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; }
+.report-footer { text-align: center; padding: 24px; color: #8D6E63; font-size: 12px; border-top: 1px solid #E0D5C8; margin-top: 20px; }
+sup { font-size: 10px; color: #D4A574; font-weight: 700; vertical-align: super; }
+.risk-low { color: #4CAF50; font-weight: 600; }
+.risk-mid { color: #FF9800; font-weight: 600; }
+.risk-high { color: #F44336; font-weight: 600; }
+@media (max-width: 768px) {
+  .container { padding: 10px; }
+  .section { padding: 18px 16px; }
+  .flow-steps { flex-direction: column; }
+  .flow-step { margin-right: 0; margin-bottom: 16px; }
+  .flow-step::after { display: none; }
+  .bar-label { width: 90px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="report-header">
+  <h1>☕ 中度烘焙咖啡豆感 · 雾化配方报告</h1>
+  <div class="subtitle">Medium Roast Coffee Bean — 从需求解析到配方落地的完整过程</div>
+  <div class="meta-tags">
+    <span class="meta-tag">📅 2026-07-14</span>
+    <span class="meta-tag">🔬 电子雾化香精</span>
+    <span class="meta-tag">🎯 中度烘焙咖啡 / 豆感</span>
+    <span class="meta-tag">📋 交互序号 #001</span>
+    <span class="meta-tag">📊 双版本（还原 + 合规）</span>
+    <span class="meta-tag">🤖 grok-4.5</span>
+  </div>
+</div>
+
+<!-- 1 -->
+<div class="section">
+  <div class="section-title"><span class="icon">1</span>需求分析与记忆调用</div>
+  <div class="subsection-title">需求解析</div>
+  <table>
+    <tr><th style="width:140px;">需求维度</th><th>解析内容</th></tr>
+    <tr><td>目标场景</td><td>电子雾化香精（烟油），强调雾化后出香效果</td></tr>
+    <tr><td>目标香型</td><td>中度烘焙咖啡，带咖啡豆实感（非纯焦糖甜香）</td></tr>
+    <tr><td>关键诉求</td><td>①雾化冲香明显 ②中焙定位不焦苦 ③有咖啡豆/豆壳感觉</td></tr>
+    <tr><td>输入信息</td><td>感官目标描述（无 GC-MS 数据）</td></tr>
+    <tr><td>输出版本</td><td>极致还原版 + 合规落地版</td></tr>
+    <tr><td>合规标准</td><td>GB 41700 + TPD / PMTA 吸入毒理导向</td></tr>
+  </table>
+  <div class="subsection-title">用户偏好摘要（来自记忆库）</div>
+  <div class="info-box">
+    📌 本次为<strong>首次交互</strong>，已为你建立调香记忆库 <code>.flavor-memory/</code>。后续每次配方都会沉淀知识，让我越来越懂你的需求。<br>
+    检测到偏好（本次推断）：场景=电子雾化 · 香型=咖啡中焙 · 强调豆感与雾化出香 · 默认双版本合规输出。
+  </div>
+  <div class="subsection-title">本次调用的历史知识</div>
+  <div class="info-box success">
+    🔍 首次交互，无历史知识可调用。本次沉淀的知识 <sup>[K001]</sup>–<sup>[K005]</sup> 将在后续配方中自动应用。
+  </div>
+</div>
+
+<!-- 2 设计过程 -->
+<div class="section">
+  <div class="section-title"><span class="icon">2</span>配方设计过程</div>
+
+  <div class="subsection-title">3.1 特征指纹选择决策</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">中度烘焙咖啡豆感的身份由核心特征指纹决定。决策树如下：</p>
+  <div class="svg-container">
+    <svg viewBox="0 0 680 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#3E2723"/>
+          <stop offset="100%" style="stop-color:#6F4E37"/>
+        </linearGradient>
+      </defs>
+      <rect x="200" y="8" width="280" height="48" rx="10" fill="url(#g1)"/>
+      <text x="340" y="30" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">目标：中焙咖啡 + 豆感</text>
+      <text x="340" y="46" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11">雾化出香优先</text>
+      <line x1="340" y1="56" x2="340" y2="72" stroke="#D4A574" stroke-width="2"/>
+      <rect x="230" y="72" width="220" height="36" rx="8" fill="#E8D5C0" stroke="#D4A574" stroke-width="1.5"/>
+      <text x="340" y="95" text-anchor="middle" fill="#3E2723" font-size="12" font-weight="600">咖啡锐香身份如何构建？</text>
+      <line x1="280" y1="108" x2="160" y2="130" stroke="#D4A574" stroke-width="2"/>
+      <line x1="400" y1="108" x2="520" y2="130" stroke="#D4A574" stroke-width="2"/>
+      <rect x="60" y="130" width="200" height="58" rx="8" fill="#4CAF50" opacity="0.15" stroke="#4CAF50" stroke-width="2"/>
+      <text x="160" y="150" text-anchor="middle" fill="#2E7D32" font-size="12" font-weight="700">✅ 糠硫醇（还原版）</text>
+      <text x="160" y="166" text-anchor="middle" fill="#5D4037" font-size="10">OT≈0.01 ppb · 0.012‰</text>
+      <text x="160" y="180" text-anchor="middle" fill="#5D4037" font-size="10">经典咖啡锐香指纹</text>
+      <rect x="420" y="130" width="200" height="58" rx="8" fill="#FF9800" opacity="0.12" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="520" y="150" text-anchor="middle" fill="#E65100" font-size="12" font-weight="600">✗ 仅堆吡嗪</text>
+      <text x="520" y="166" text-anchor="middle" fill="#5D4037" font-size="10">只有焙烤，缺咖啡刀锋感</text>
+      <text x="520" y="180" text-anchor="middle" fill="#5D4037" font-size="10">易做成“坚果烤香”</text>
+      <line x1="340" y1="188" x2="340" y2="210" stroke="#D4A574" stroke-width="2"/>
+      <rect x="230" y="210" width="220" height="36" rx="8" fill="#E8D5C0" stroke="#D4A574" stroke-width="1.5"/>
+      <text x="340" y="233" text-anchor="middle" fill="#3E2723" font-size="12" font-weight="600">如何做出“咖啡豆感觉”？</text>
+      <line x1="280" y1="246" x2="160" y2="268" stroke="#D4A574" stroke-width="2"/>
+      <line x1="400" y1="246" x2="520" y2="268" stroke="#D4A574" stroke-width="2"/>
+      <rect x="60" y="268" width="200" height="58" rx="8" fill="#4CAF50" opacity="0.15" stroke="#4CAF50" stroke-width="2"/>
+      <text x="160" y="288" text-anchor="middle" fill="#2E7D32" font-size="12" font-weight="700">✅ IBMP + IPMP</text>
+      <text x="160" y="304" text-anchor="middle" fill="#5D4037" font-size="10">痕量甲氧基吡嗪</text>
+      <text x="160" y="318" text-anchor="middle" fill="#5D4037" font-size="10">生豆/豆壳青香身份</text>
+      <rect x="420" y="268" width="200" height="58" rx="8" fill="#FF9800" opacity="0.12" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="520" y="288" text-anchor="middle" fill="#E65100" font-size="12" font-weight="600">✗ 加大愈创木酚</text>
+      <text x="520" y="304" text-anchor="middle" fill="#5D4037" font-size="10">只会加深焙/烟熏</text>
+      <text x="520" y="318" text-anchor="middle" fill="#5D4037" font-size="10">不是“豆感”</text>
+      <line x1="340" y1="326" x2="340" y2="348" stroke="#D4A574" stroke-width="2"/>
+      <rect x="230" y="348" width="220" height="36" rx="8" fill="#E8D5C0" stroke="#D4A574" stroke-width="1.5"/>
+      <text x="340" y="371" text-anchor="middle" fill="#3E2723" font-size="12" font-weight="600">合规版如何补偿锐香？</text>
+      <line x1="340" y1="384" x2="340" y2="400" stroke="#D4A574" stroke-width="2"/>
+      <rect x="140" y="400" width="400" height="48" rx="8" fill="#4CAF50" opacity="0.12" stroke="#4CAF50" stroke-width="2"/>
+      <text x="340" y="420" text-anchor="middle" fill="#2E7D32" font-size="12" font-weight="700">✅ 咖啡呋喃酮↑ + 乙酰噻唑↑ + 吡嗪↑</text>
+      <text x="340" y="438" text-anchor="middle" fill="#5D4037" font-size="10">去掉糠硫醇后的等效咖啡身份方案</text>
+    </svg>
+  </div>
+
+  <div class="subsection-title">3.2 香韵分路推导过程（四步推导法）</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">基于动态分路推导引擎，根据中度烘焙咖啡豆感自主推导 <b>7 路</b>体系：</p>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-title">特征路识别</div>
+      <div class="step-desc">硫醇 = 咖啡锐香；甲氧基吡嗪 = 豆感<br>→ <b>硫磺特征路 + 咖啡豆青香路</b></div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-title">基底路构建</div>
+      <div class="step-desc">中焙主体 = 吡嗪 + 焦糖 + 适度酚香<br>→ <b>焙烤吡嗪 / 焦糖甜 / 烟熏酚</b></div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-title">修饰路补充</div>
+      <div class="step-desc">明亮酸 + 果蜜抬升防死甜<br>→ <b>酸香路 + 果蜜提升路</b></div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-title">平衡校验</div>
+      <div class="step-desc">酚香压支撑位，防深焙化<br>✅ 豆感不被甜香淹没<br>✅ 出香与中焙兼顾</div>
+    </div>
+  </div>
+  <div class="info-box">
+    <b>分路数量自适应：</b>中等复杂度咖啡香型采用 7 路（特征 2 + 基底 3 + 修饰 2），覆盖“豆感”这一非常规强调维度。 <sup>[K005]</sup>
+  </div>
+
+  <div class="subsection-title">3.3 挥发梯度设计</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:8px;">确保雾化出香层次：头香冲出 → 体香咖啡主体 → 基香甜体感持久</p>
+  <div class="gradient-bar">
+    <div class="gradient-segment" style="flex: 18; background: linear-gradient(90deg, #FFB74D, #FF9800);">头香 18%</div>
+    <div class="gradient-segment" style="flex: 38; background: linear-gradient(90deg, #8D6E63, #6F4E37);">体香 38%</div>
+    <div class="gradient-segment" style="flex: 28; background: linear-gradient(90deg, #5D4037, #3E2723);">基香 28%</div>
+  </div>
+  <p style="font-size:12px; color:#8D6E63;">另有特征指纹层 ~12% + 修饰层 ~4% 贯穿各挥发段</p>
+  <table style="margin-top:12px;">
+    <tr><th>梯度</th><th>挥发特性</th><th>关键组分</th><th>雾化行为</th></tr>
+    <tr><td><b>头香 18%</b></td><td>高挥发、开门香</td><td>乙酸乙酯、二甲基吡嗪、糠醛系</td><td>开抽即冲出咖啡/焙香 <sup>[K001]</sup></td></tr>
+    <tr><td><b>体香 38%</b></td><td>中挥发、主体</td><td>三甲基/乙酰基吡嗪、愈创木酚、Furaneol</td><td>口腔中段呈现中焙咖啡</td></tr>
+    <tr><td><b>基香 28%</b></td><td>低挥发、体感</td><td>乙基麦芽酚、香兰素、4-乙基愈创木酚</td><td>热激活甜香+余韵 <sup>[K001]</sup></td></tr>
+  </table>
+
+  <div class="subsection-title">3.4 关键用量决策（OT值导向）</div>
+  <table>
+    <tr><th>组分</th><th>OT值(ppb)</th><th>极致版用量(‰)</th><th>感官贡献逻辑</th></tr>
+    <tr><td><b>糠硫醇</b></td><td>~0.01</td><td>0.012</td><td>OT极低→痕量即可主导咖啡锐香；过量变硫臭 <sup>[K003]</sup></td></tr>
+    <tr><td><b>IBMP</b></td><td>~0.002</td><td>0.004</td><td>豆感核心；过量呈青椒异味，必须母液法 <sup>[K003]</sup></td></tr>
+    <tr><td><b>2-乙酰基吡嗪</b></td><td>~60</td><td>2.20</td><td>中低OT，中等用量撑焙咖啡主体</td></tr>
+    <tr><td><b>愈创木酚</b></td><td>~3</td><td>0.45</td><td>OT低但只给支撑酚香，防深焙化 <sup>[K002]</sup></td></tr>
+    <tr><td><b>乙基麦芽酚</b></td><td>~5000</td><td>8.00</td><td>OT高需高用量；雾化热激活出香载体 <sup>[K001]</sup></td></tr>
+    <tr><td><b>乙酸</b></td><td>~22000</td><td>1.20</td><td>OT高，适量提明亮酸，防死甜</td></tr>
+  </table>
+  <div class="info-box warning">
+    <b>OT值导向核心原则：</b>用量 ≠ 峰面积。硫醇/甲氧基吡嗪用量是“万分之一级”，却决定香型身份；乙基麦芽酚用量高是因为阈值高且承担雾化出香。 <sup>[K001]</sup>
+  </div>
+</div>
+
+<!-- 3 极致版 -->
+<div class="section">
+  <div class="section-title"><span class="icon">3</span>极致还原版配方</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">不考虑合规限制，追求最大感官还原度。<b style="color:#C62828;">仅供研发参考，不可直接量产。</b></p>
+  <table>
+    <tr><th>#</th><th>组分</th><th>CAS</th><th>类别</th><th>用量(‰)</th><th>功能层</th><th>OT(ppb)</th><th>合规</th></tr>
+    <tr style="background:#FFEBEE;"><td>1</td><td>糠硫醇</td><td>98-02-2</td><td>含硫</td><td><b>0.012</b></td><td>特征</td><td>~0.01</td><td><span class="tag tag-ban">禁用倾向</span></td></tr>
+    <tr style="background:#FFF3E0;"><td>2</td><td>糠基甲二硫醚</td><td>57500-00-2</td><td>含硫</td><td><b>0.025</b></td><td>特征</td><td>~0.04</td><td><span class="tag tag-warn">需评估</span></td></tr>
+    <tr><td>3</td><td>2-异丁基-3-甲氧基吡嗪</td><td>24683-00-9</td><td>吡嗪</td><td><b>0.004</b></td><td>特征</td><td>~0.002</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>4</td><td>2-异丙基-3-甲氧基吡嗪</td><td>25773-40-4</td><td>吡嗪</td><td><b>0.0025</b></td><td>特征</td><td>~0.002</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>5</td><td>咖啡呋喃酮</td><td>3188-00-9</td><td>呋喃酮</td><td><b>0.80</b></td><td>特征</td><td>~500</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>6</td><td>2-乙酰基噻唑</td><td>24295-03-2</td><td>噻唑</td><td><b>0.18</b></td><td>特征</td><td>~10</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>7</td><td>2,3-二甲基吡嗪</td><td>5910-89-4</td><td>吡嗪</td><td><b>1.00</b></td><td>头香</td><td>~400</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>8</td><td>乙酸乙酯</td><td>141-78-6</td><td>酯</td><td><b>1.50</b></td><td>头香</td><td>~5000</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr style="background:#FFEBEE;"><td>9</td><td>糠醛</td><td>98-01-1</td><td>醛</td><td><b>0.60</b></td><td>头香</td><td>~3000</td><td><span class="tag tag-ban">限制</span></td></tr>
+    <tr style="background:#FFF3E0;"><td>10</td><td>5-甲基糠醛</td><td>620-02-0</td><td>醛</td><td><b>0.45</b></td><td>头香</td><td>~500</td><td><span class="tag tag-warn">需评估</span></td></tr>
+    <tr style="background:#FFEBEE;"><td>11</td><td>2,3-戊二酮</td><td>600-14-6</td><td>α-二酮</td><td><b>0.25</b></td><td>头香</td><td>~20</td><td><span class="tag tag-ban">禁用</span></td></tr>
+    <tr><td>12</td><td>2,3,5-三甲基吡嗪</td><td>14667-55-1</td><td>吡嗪</td><td><b>4.50</b></td><td>体香</td><td>~800</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>13</td><td>2-乙酰基吡嗪</td><td>22047-25-2</td><td>吡嗪</td><td><b>2.20</b></td><td>体香</td><td>~60</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>14</td><td>2-乙基-3,5-二甲基吡嗪</td><td>13925-07-0</td><td>吡嗪</td><td><b>1.50</b></td><td>体香</td><td>~400</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>15</td><td>愈创木酚</td><td>90-05-1</td><td>酚</td><td><b>0.45</b></td><td>体香</td><td>~3</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>16</td><td>4-乙烯基愈创木酚</td><td>7786-61-0</td><td>酚</td><td><b>0.15</b></td><td>体香</td><td>~20</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>17</td><td>呋喃酮 Furaneol</td><td>3658-77-3</td><td>呋喃酮</td><td><b>3.20</b></td><td>体香</td><td>~60</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr style="background:#FFEBEE;"><td>18</td><td>乙偶姻</td><td>513-86-0</td><td>α-羟基酮</td><td><b>0.60</b></td><td>体香</td><td>~800</td><td><span class="tag tag-ban">禁用</span></td></tr>
+    <tr><td>19</td><td>4-乙基愈创木酚</td><td>2785-89-9</td><td>酚</td><td><b>0.35</b></td><td>基香</td><td>~50</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>20</td><td>乙基麦芽酚</td><td>4940-11-8</td><td>吡喃酮</td><td><b>8.00</b></td><td>基香</td><td>~5000</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>21</td><td>麦芽酚</td><td>118-71-8</td><td>吡喃酮</td><td><b>2.00</b></td><td>基香</td><td>~2500</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>22</td><td>香兰素</td><td>121-33-5</td><td>醛</td><td><b>3.50</b></td><td>基香</td><td>~200</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>23</td><td>乙酸</td><td>64-19-7</td><td>酸</td><td><b>1.20</b></td><td>修饰</td><td>~22000</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>24</td><td>异戊酸</td><td>503-74-2</td><td>酸</td><td><b>0.20</b></td><td>修饰</td><td>~120</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>25</td><td>β-大马酮</td><td>23726-93-4</td><td>酮</td><td><b>0.08</b></td><td>修饰</td><td>~0.002</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>26</td><td>苯乙醛</td><td>122-78-1</td><td>醛</td><td><b>0.12</b></td><td>修饰</td><td>~4</td><td><span class="tag tag-ok">允许</span></td></tr>
+    <tr><td>27</td><td>丙二醇 (PG)</td><td>57-55-6</td><td>溶剂</td><td>966.90</td><td>溶剂</td><td>—</td><td><span class="tag tag-ok">允许</span></td></tr>
+  </table>
+  <p style="font-size:14px; font-weight:700; color:#3E2723; margin-top:8px;">配方总计：1000.000‰ ｜ 香精组分 33.10‰ + PG 966.90‰</p>
+</div>
+
+<!-- 4 结构 -->
+<div class="section">
+  <div class="section-title"><span class="icon">4</span>香韵结构分析</div>
+  <div class="subsection-title">五层骨架拆解</div>
+  <table>
+    <tr><th>骨架层</th><th>角色</th><th>关键组分</th></tr>
+    <tr><td><b>头香层</b></td><td>开门冲香</td><td>乙酸乙酯、二甲基吡嗪、糠醛系、戊二酮</td></tr>
+    <tr><td><b>体香层</b></td><td>中焙主体</td><td>三甲基/乙酰基吡嗪、愈创木酚、Furaneol</td></tr>
+    <tr><td><b>基香层</b></td><td>体感与余韵</td><td>乙基麦芽酚、香兰素、4-乙基愈创木酚</td></tr>
+    <tr><td><b>特征指纹层</b></td><td>咖啡+豆感身份</td><td>糠硫醇、IBMP/IPMP、咖啡呋喃酮、乙酰噻唑</td></tr>
+    <tr><td><b>修饰层</b></td><td>酸甜与抬升</td><td>乙酸、异戊酸、β-大马酮、苯乙醛</td></tr>
+  </table>
+  <div class="subsection-title">香韵分路贡献度可视化</div>
+  <div class="bar-chart">
+    <div class="bar-row"><div class="bar-label">① 焙烤吡嗪</div><div class="bar-track"><div class="bar-fill" style="width:28%; background:linear-gradient(90deg,#6F4E37,#8B6F47);">28% · 主导</div></div></div>
+    <div class="bar-row"><div class="bar-label">② 焦糖甜香</div><div class="bar-track"><div class="bar-fill" style="width:22%; background:linear-gradient(90deg,#D4A574,#C4956A);">22% · 主导</div></div></div>
+    <div class="bar-row"><div class="bar-label">③ 硫磺特征</div><div class="bar-track"><div class="bar-fill" style="width:18%; background:linear-gradient(90deg,#5D4037,#3E2723);">18% · 特征</div></div></div>
+    <div class="bar-row"><div class="bar-label">④ 咖啡豆青香</div><div class="bar-track"><div class="bar-fill" style="width:12%; background:linear-gradient(90deg,#689F38,#8BC34A);">12% · 特征</div></div></div>
+    <div class="bar-row"><div class="bar-label">⑤ 烟熏酚香</div><div class="bar-track"><div class="bar-fill" style="width:10%; background:linear-gradient(90deg,#A1887F,#8D6E63);">10% · 支撑</div></div></div>
+    <div class="bar-row"><div class="bar-label">⑥ 酸香</div><div class="bar-track"><div class="bar-fill" style="width:6%; background:linear-gradient(90deg,#FFB74D,#FFA726);">6% · 修饰</div></div></div>
+    <div class="bar-row"><div class="bar-label">⑦ 果蜜提升</div><div class="bar-track"><div class="bar-fill" style="width:4%; background:linear-gradient(90deg,#F8BBD0,#F48FB1);">4% · 修饰</div></div></div>
+  </div>
+  <div class="info-box">
+    <b>关键洞察：</b>酚香必须压在支撑位——一旦与吡嗪对等，中焙会滑向深焙烟熏；豆青香路用量极低但 OT 校正后贡献 12%，是“豆感”不可替代的分路。 <sup>[K002]</sup><sup>[K003]</sup>
+  </div>
+  <div class="subsection-title">特征指纹组分详解</div>
+  <table>
+    <tr><th>特征指纹</th><th>角色</th><th>OT值</th><th>用量</th><th>感官功能</th></tr>
+    <tr><td><b>糠硫醇</b></td><td>咖啡锐香</td><td>~0.01 ppb</td><td>0.012‰</td><td>经典咖啡身份（还原版）</td></tr>
+    <tr><td><b>IBMP</b></td><td>豆感</td><td>~0.002 ppb</td><td>0.004‰</td><td>生豆/豆壳青香</td></tr>
+    <tr><td><b>IPMP</b></td><td>豆感辅</td><td>~0.002 ppb</td><td>0.0025‰</td><td>泥土豆感层次</td></tr>
+    <tr><td><b>咖啡呋喃酮</b></td><td>甜焙身份</td><td>~500 ppb</td><td>0.80‰</td><td>咖啡甜焙指纹；合规主补偿</td></tr>
+    <tr><td><b>2-乙酰基噻唑</b></td><td>焙坚果</td><td>~10 ppb</td><td>0.18‰</td><td>焙烤坚果/咖啡深度</td></tr>
+  </table>
+</div>
+
+<!-- 5 风格 -->
+<div class="section">
+  <div class="section-title"><span class="icon">5</span>风格参数评估</div>
+  <div class="param-grid">
+    <div class="param-card"><div class="p-label">烘焙度</div><div class="p-value">55</div><div class="p-bar"><div class="p-fill" style="width:55%; background:#6F4E37;"></div></div></div>
+    <div class="param-card"><div class="p-label">甜度</div><div class="p-value">48</div><div class="p-bar"><div class="p-fill" style="width:48%; background:#D4A574;"></div></div></div>
+    <div class="param-card"><div class="p-label">酸感</div><div class="p-value">35</div><div class="p-bar"><div class="p-fill" style="width:35%; background:#FFB74D;"></div></div></div>
+    <div class="param-card"><div class="p-label">豆青感</div><div class="p-value">42</div><div class="p-bar"><div class="p-fill" style="width:42%; background:#689F38;"></div></div></div>
+    <div class="param-card"><div class="p-label">烟熏感</div><div class="p-value">28</div><div class="p-bar"><div class="p-fill" style="width:28%; background:#8D6E63;"></div></div></div>
+    <div class="param-card"><div class="p-label">雾化冲香力</div><div class="p-value">75</div><div class="p-bar"><div class="p-fill" style="width:75%; background:#E65100;"></div></div></div>
+  </div>
+  <table style="margin-top:16px;">
+    <tr><th>参数</th><th>目标值</th><th>实现方式</th></tr>
+    <tr><td>烘焙度</td><td>中焙 55</td><td>吡嗪主导 + 酚香支撑位上限控制 <sup>[K002]</sup></td></tr>
+    <tr><td>豆青感</td><td>42（强调）</td><td>IBMP+IPMP 痕量指纹，勿用烟熏替代 <sup>[K003]</sup></td></tr>
+    <tr><td>雾化冲香</td><td>75</td><td>乙酸乙酯开门 + 乙基麦芽酚热激活 <sup>[K001]</sup></td></tr>
+    <tr><td>甜度</td><td>48</td><td>Furaneol+乙基麦芽酚，酸香防死甜</td></tr>
+  </table>
+</div>
+
+<!-- 6 合规版 -->
+<div class="section">
+  <div class="section-title"><span class="icon">6</span>合规落地版配方</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">符合 GB 41700 + TPD/PMTA 吸入毒理导向。<b style="color:#2E7D32;">可量产评估。</b></p>
+  <div class="subsection-title">双版本差异说明</div>
+  <table class="diff-table">
+    <tr><th>对比维度</th><th class="col-extreme">极致还原版</th><th class="col-compliant">合规落地版</th><th>差异说明</th></tr>
+    <tr><td><b>咖啡锐香</b></td><td class="col-extreme">糠硫醇 <span class="tag tag-ban">禁用</span></td><td class="col-compliant">呋喃酮+噻唑↑ <span class="tag tag-ok">允许</span></td><td>锐度 −15~20%</td></tr>
+    <tr><td><b>α-二酮</b></td><td class="col-extreme">戊二酮+乙偶姻 <span class="tag tag-ban">禁用</span></td><td class="col-compliant">γ-壬内酯+香兰素 <span class="tag tag-ok">允许</span></td><td>奶油感减弱</td></tr>
+    <tr><td><b>糠醛系</b></td><td class="col-extreme">糠醛/5-甲基糠醛 <span class="tag tag-warn">风险</span></td><td class="col-compliant">移除，吡嗪开门↑ <span class="tag tag-ok">允许</span></td><td>面包焙香略弱</td></tr>
+    <tr><td><b>豆感</b></td><td class="col-extreme">IBMP 0.004</td><td class="col-compliant">IBMP 0.005↑</td><td>豆感保持/略强</td></tr>
+    <tr><td><b>雾化出香</b></td><td class="col-extreme">乙基麦芽酚 8‰</td><td class="col-compliant">乙基麦芽酚 10‰↑</td><td>冲香力不降反升</td></tr>
+  </table>
+  <div class="subsection-title">合规版完整配方</div>
+  <table>
+    <tr><th>#</th><th>组分</th><th>CAS</th><th>用量(‰)</th><th>功能层</th><th>合规</th><th>与极致版差异</th></tr>
+    <tr><td>1</td><td>2-异丁基-3-甲氧基吡嗪</td><td>24683-00-9</td><td><b>0.005</b></td><td>特征</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>2</td><td>2-异丙基-3-甲氧基吡嗪</td><td>25773-40-4</td><td><b>0.003</b></td><td>特征</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>3</td><td>咖啡呋喃酮</td><td>3188-00-9</td><td><b>1.60</b></td><td>特征</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑替代硫醇</td></tr>
+    <tr><td>4</td><td>2-乙酰基噻唑</td><td>24295-03-2</td><td><b>0.35</b></td><td>特征</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>5</td><td>2,3-二甲基吡嗪</td><td>5910-89-4</td><td><b>1.60</b></td><td>头香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>6</td><td>乙酸乙酯</td><td>141-78-6</td><td><b>1.80</b></td><td>头香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑冲香</td></tr>
+    <tr><td>7</td><td>2,3,5-三甲基吡嗪</td><td>14667-55-1</td><td><b>5.00</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>8</td><td>2-乙酰基吡嗪</td><td>22047-25-2</td><td><b>2.50</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>9</td><td>2-乙基-3,5-二甲基吡嗪</td><td>13925-07-0</td><td><b>1.80</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>10</td><td>愈创木酚</td><td>90-05-1</td><td><b>0.55</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>11</td><td>4-乙烯基愈创木酚</td><td>7786-61-0</td><td><b>0.18</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>12</td><td>Furaneol</td><td>3658-77-3</td><td><b>3.50</b></td><td>体香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>13</td><td>4-乙基愈创木酚</td><td>2785-89-9</td><td><b>0.40</b></td><td>基香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>14</td><td>乙基麦芽酚</td><td>4940-11-8</td><td><b>10.00</b></td><td>基香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑出香</td></tr>
+    <tr><td>15</td><td>麦芽酚</td><td>118-71-8</td><td><b>2.20</b></td><td>基香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>16</td><td>香兰素</td><td>121-33-5</td><td><b>4.00</b></td><td>基香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr style="background:#E8F5E9;"><td>17</td><td>γ-壬内酯</td><td>104-61-0</td><td><b>0.25</b></td><td>基香</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">新增·代乙偶姻</td></tr>
+    <tr><td>18</td><td>乙酸</td><td>64-19-7</td><td><b>1.30</b></td><td>修饰</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>19</td><td>异戊酸</td><td>503-74-2</td><td><b>0.22</b></td><td>修饰</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>20</td><td>β-大马酮</td><td>23726-93-4</td><td><b>0.10</b></td><td>修饰</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">↑</td></tr>
+    <tr><td>21</td><td>苯乙醛</td><td>122-78-1</td><td><b>0.10</b></td><td>修饰</td><td><span class="tag tag-ok">允许</span></td><td style="color:#E65100;">略降</td></tr>
+    <tr style="background:#E8F5E9;"><td>22</td><td>乳酸乙酯</td><td>97-64-3</td><td><b>0.80</b></td><td>修饰</td><td><span class="tag tag-ok">允许</span></td><td style="color:#2E7D32;">新增</td></tr>
+    <tr><td>23</td><td>丙二醇 (PG)</td><td>57-55-6</td><td>965.45</td><td>溶剂</td><td><span class="tag tag-ok">允许</span></td><td>—</td></tr>
+  </table>
+  <p style="font-size:14px; font-weight:700; color:#3E2723; margin-top:8px;">配方总计：1000.000‰ ｜ 香精组分 34.55‰ + PG 965.45‰</p>
+</div>
+
+<!-- 7 合规审查 -->
+<div class="section">
+  <div class="section-title"><span class="icon">7</span>合规审查报告</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">适用标准：GB 41700 电子烟国标 + 欧盟 TPD / 美国 PMTA 吸入毒理审慎原则</p>
+  <div class="subsection-title">受限组分处理清单</div>
+  <table>
+    <tr><th>原组分</th><th>CAS</th><th>限值要求</th><th>极致版用量</th><th>合规版处理</th><th>替代方案</th></tr>
+    <tr><td><b>糠硫醇</b></td><td>98-02-2</td><td>吸入高关注</td><td>0.012‰</td><td><span class="tag tag-ban">移除</span></td><td>咖啡呋喃酮↑+乙酰噻唑↑<br><span style="font-size:11px;color:#8D6E63;">锐度损失约15-20%</span></td></tr>
+    <tr><td><b>糠基甲二硫醚</b></td><td>57500-00-2</td><td>含硫评估</td><td>0.025‰</td><td><span class="tag tag-ban">移除</span></td><td>同上+吡嗪微调</td></tr>
+    <tr><td><b>糠醛</b></td><td>98-01-1</td><td>刺激/毒理</td><td>0.60‰</td><td><span class="tag tag-ban">移除</span></td><td>二甲基吡嗪开门补偿</td></tr>
+    <tr><td><b>5-甲基糠醛</b></td><td>620-02-0</td><td>呋喃评估</td><td>0.45‰</td><td><span class="tag tag-ban">移除</span></td><td>Furaneol+咖啡呋喃酮</td></tr>
+    <tr><td><b>2,3-戊二酮</b></td><td>600-14-6</td><td>α-二酮禁用</td><td>0.25‰</td><td><span class="tag tag-ban">移除</span></td><td>—</td></tr>
+    <tr><td><b>乙偶姻</b></td><td>513-86-0</td><td>α-二酮限制</td><td>0.60‰</td><td><span class="tag tag-ban">移除</span></td><td>γ-壬内酯+香兰素<br><span style="font-size:11px;color:#8D6E63;">改轻乳脂尾</span></td></tr>
+  </table>
+  <div class="info-box success">
+    <b>合规结论：</b>✅ 合规落地版已清除全部高风险受限组分，豆感通过甲氧基吡嗪提量保持，雾化冲香通过酯类与乙基麦芽酚增强，可进入小试评香与量产评估。 <sup>[K005]</sup>
+  </div>
+</div>
+
+<!-- 8 雾化 -->
+<div class="section">
+  <div class="section-title"><span class="icon">8</span>雾化工程化适配报告</div>
+  <div class="subsection-title">溶解度校验</div>
+  <table>
+    <tr><th>组分</th><th>PG溶解度</th><th>VG溶解度</th><th>风险</th><th>操作建议</th></tr>
+    <tr><td>乙基麦芽酚</td><td>优</td><td>中</td><td><span class="risk-mid">中</span></td><td>45℃ PG 预溶 <sup>[K004]</sup></td></tr>
+    <tr><td>香兰素</td><td>优</td><td>中</td><td><span class="risk-mid">中</span></td><td>同左，防析晶</td></tr>
+    <tr><td>吡嗪类</td><td>优</td><td>良</td><td><span class="risk-low">低</span></td><td>常温可溶</td></tr>
+    <tr><td>甲氧基吡嗪</td><td>优</td><td>优</td><td><span class="risk-low">低</span></td><td>必须 1% 母液称量 <sup>[K003]</sup></td></tr>
+    <tr><td>γ-壬内酯</td><td>良</td><td>中</td><td><span class="risk-low">低</span></td><td>PG 预溶</td></tr>
+  </table>
+  <div class="subsection-title">热稳定性评估</div>
+  <table>
+    <tr><th>组分</th><th>分解温度(°C)</th><th>雾化风险</th><th>产物风险</th><th>建议</th></tr>
+    <tr><td>吡嗪类</td><td>高</td><td><span class="risk-low">低</span></td><td>低</td><td>雾化友好</td></tr>
+    <tr><td>乙基麦芽酚</td><td>&gt;250</td><td><span class="risk-mid">低-中</span></td><td>低</td><td>功率≤35W 为宜</td></tr>
+    <tr><td>Furaneol</td><td>中</td><td><span class="risk-mid">中</span></td><td>可能焦甜杂味</td><td>控制功率</td></tr>
+    <tr><td>愈创木酚</td><td>高</td><td><span class="risk-low">低</span></td><td>低</td><td>—</td></tr>
+  </table>
+  <div class="subsection-title">积碳风险评级</div>
+  <div class="bar-chart">
+    <div class="bar-row"><div class="bar-label" style="width:160px;">乙基麦芽酚 (10‰)</div><div class="bar-track"><div class="bar-fill" style="width:55%; background:#FF9800;">中</div></div></div>
+    <div class="bar-row"><div class="bar-label" style="width:160px;">香兰素 (4‰)</div><div class="bar-track"><div class="bar-fill" style="width:45%; background:#FF9800;">中</div></div></div>
+    <div class="bar-row"><div class="bar-label" style="width:160px;">Furaneol (3.5‰)</div><div class="bar-track"><div class="bar-fill" style="width:30%; background:#FFB74D;">低-中</div></div></div>
+    <div class="bar-row"><div class="bar-label" style="width:160px;">吡嗪/酚类</div><div class="bar-track"><div class="bar-fill" style="width:15%; background:#4CAF50;">低</div></div></div>
+  </div>
+  <div class="subsection-title">体感优化建议</div>
+  <table>
+    <tr><th style="width:120px;">体感维度</th><th>评估</th><th>建议</th></tr>
+    <tr><td><b>击喉感</b></td><td>中等偏柔</td><td>若需更柔，乙酸降至 0.8‰</td></tr>
+    <tr><td><b>口腔饱满度</b></td><td>良好</td><td>乙基麦芽酚+香兰素支撑 <sup>[K001]</sup></td></tr>
+    <tr><td><b>余味干净度</b></td><td>合规版更干净</td><td>勿再叠加过量甜基</td></tr>
+    <tr><td><b>嗅抽一致性</b></td><td>嗅偏甜焙、抽偏豆焙</td><td>符合咖啡特征，属正常</td></tr>
+  </table>
+  <div class="info-box warning">
+    <b>量产风险提示：</b><br>
+    ① 乙基麦芽酚/香兰素低温析晶 → PG预溶+陈化检查<br>
+    ② IBMP 称量误差 → 强制母液法<br>
+    ③ 用户功率过高 → 标签建议 18–35W<br>
+    ④ 总甜料叠加积碳 → 烟油添加量建议 4–7% <sup>[K004]</sup>
+  </div>
+</div>
+
+<!-- 9 使用建议 -->
+<div class="section">
+  <div class="section-title"><span class="icon">9</span>使用建议与知识沉淀</div>
+  <div class="subsection-title">最终推荐配方</div>
+  <div class="info-box success">
+    <b>推荐使用「合规落地版」进行量产评估。</b><br>
+    添加量 5% 起步（PG/VG 50/50），陈化 7 天，功率 18–35W。若豆感不足可微调 IBMP 母液 +10%；若偏深焙先降愈创木酚 20%。 <sup>[K005]</sup>
+  </div>
+  <div class="subsection-title">工艺建议</div>
+  <table>
+    <tr><th style="width:120px;">工艺环节</th><th>建议</th></tr>
+    <tr><td>称量</td><td>甲氧基吡嗪/硫醇必须母液法 <sup>[K003]</sup></td></tr>
+    <tr><td>溶解</td><td>乙基麦芽酚、香兰素 45℃ PG 预溶 <sup>[K004]</sup></td></tr>
+    <tr><td>调配顺序</td><td>溶剂 → 甜基 → 吡嗪/酚 → 酸 → 特征痕量 → 酯类</td></tr>
+    <tr><td>陈化</td><td>密封避光 5–10 天，合规版建议 ≥7 天</td></tr>
+    <tr><td>烟油复配</td><td>推荐 4–7%，出香优先 50/50 PG/VG <sup>[K001]</sup></td></tr>
+  </table>
+  <div class="subsection-title">质控建议</div>
+  <table>
+    <tr><th>检测项</th><th>方法</th><th>标准</th></tr>
+    <tr><td>外观</td><td>目视</td><td>澄清无析出</td></tr>
+    <tr><td>特征指纹</td><td>GC-MS</td><td>IBMP/咖啡呋喃酮/乙酰噻唑峰存在</td></tr>
+    <tr><td>受限物筛查</td><td>GC-MS</td><td>合规版：糠硫醇/α-二酮/糠醛未检出</td></tr>
+    <tr><td>感官评测</td><td>雾化评香</td><td>中焙、豆感、冲香三项达标</td></tr>
+  </table>
+  <div class="subsection-title">本次沉淀的新知识</div>
+  <div class="knowledge-cards">
+    <div class="k-card"><span class="k-id">K001</span><div class="k-title">雾化咖啡出香双引擎</div><div class="k-desc">乙酸乙酯开门 + 乙基麦芽酚热激活，是雾化咖啡冲香的关键组合。</div><div class="k-source">来源：2026-07-14 / 咖啡 / 电子雾化</div></div>
+    <div class="k-card"><span class="k-id">K002</span><div class="k-title">中焙酚香上限</div><div class="k-desc">愈创木酚系须压在支撑位；与吡嗪对等会使中焙滑向深焙烟熏。</div><div class="k-source">来源：2026-07-14 / 咖啡 / 电子雾化</div></div>
+    <div class="k-card"><span class="k-id">K003</span><div class="k-title">豆感=甲氧基吡嗪</div><div class="k-desc">“咖啡豆感觉”靠 IBMP/IPMP 痕量构建，不能用加大烟熏替代；必须母液法。</div><div class="k-source">来源：2026-07-14 / 咖啡 / 电子雾化</div></div>
+    <div class="k-card"><span class="k-id">K004</span><div class="k-title">甜基积碳与预溶</div><div class="k-desc">乙基麦芽酚/香兰素需 PG 热预溶；烟油总甜料勿叠加上限，防积碳。</div><div class="k-source">来源：2026-07-14 / 咖啡 / 电子雾化</div></div>
+    <div class="k-card"><span class="k-id">K005</span><div class="k-title">硫醇合规替代路径</div><div class="k-desc">糠硫醇 → 咖啡呋喃酮↑+乙酰噻唑↑+吡嗪↑；豆感靠甲氧基吡嗪提量保持。</div><div class="k-source">来源：2026-07-14 / 咖啡 / 电子雾化</div></div>
+  </div>
+  <div class="info-box">
+    <b>记忆库更新：</b>已创建 <code>.flavor-memory/</code>（PROFILE / KNOWLEDGE / FEEDBACK-LOG / INDEX / formulas/coffee/），写入 5 条新知识，归档本次配方档案。
+  </div>
+</div>
+
+<div class="report-footer">
+  <p>☕ 中度烘焙咖啡豆感 · 雾化配方报告</p>
+  <p>生成日期：2026-07-14 ｜ 交互序号：#001 ｜ 香韵大师 · 资深调香师</p>
+  <p style="margin-top:8px; color:#BCAAA4;">本报告由调香专家系统生成，配方数据仅供研发参考，正式投产前须进行安全评估与合规检测</p>
+</div>
+
+</div>
+</body>
+</html>
