@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{配方名称}} · 配方报告</title>
+<style>
+/* ========== 全局样式 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #F5F0EB;
+  color: #3E2723;
+  line-height: 1.7;
+  font-size: 14px;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+/* ========== 报告头部 ========== */
+.report-header {
+  background: linear-gradient(135deg, #3E2723 0%, #6F4E37 50%, #8B6F47 100%);
+  color: #FAF6F1;
+  border-radius: 16px;
+  padding: 40px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.report-header::after {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(212,165,116,0.1);
+}
+.report-header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 1px; }
+.report-header .subtitle { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
+.report-header .meta-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+.report-header .meta-tag {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* ========== 章节通用 ========== */
+.section {
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 28px 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(62,39,35,0.06);
+  border: 1px solid #EDE4DA;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3E2723;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #E0D5C8;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title .icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6F4E37, #8B6F47);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.subsection-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6F4E37;
+  margin: 20px 0 12px;
+  padding-left: 12px;
+  border-left: 4px solid #D4A574;
+}
+
+/* ========== 表格 ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 12px 0;
+}
+th {
+  background: #F5EDE3;
+  color: #3E2723;
+  font-weight: 600;
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 2px solid #D4A574;
+  white-space: nowrap;
+}
+td {
+  padding: 8px;
+  border-bottom: 1px solid #EDE4DA;
+  color: #5D4037;
+}
+tr:hover td { background: #FAF6F1; }
+
+/* ========== 合规标签 ========== */
+.tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.tag-ok { background: #E8F5E9; color: #2E7D32; }
+.tag-warn { background: #FFF3E0; color: #E65100; }
+.tag-ban { background: #FFEBEE; color: #C62828; }
+
+/* ========== 知识卡片 ========== */
+.knowledge-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin: 12px 0; }
+.k-card {
+  background: linear-gradient(135deg, #FFF8F0, #FAF0E6);
+  border: 1px solid #E8D5C0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  position: relative;
+}
+.k-card .k-id {
+  display: inline-block;
+  background: #6F4E37;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.k-card .k-title { font-size: 13px; font-weight: 600; color: #3E2723; margin-bottom: 4px; }
+.k-card .k-desc { font-size: 12px; color: #6D4C41; line-height: 1.5; }
+.k-card .k-source { font-size: 11px; color: #A1887F; margin-top: 6px; }
+
+/* ========== 参数卡片网格 ========== */
+.param-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.param-card {
+  background: linear-gradient(135deg, #F5EDE3, #FFF);
+  border: 1px solid #E0D5C8;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.param-card .p-label { font-size: 12px; color: #8D6E63; margin-bottom: 6px; }
+.param-card .p-value { font-size: 22px; font-weight: 700; color: #3E2723; }
+.param-card .p-bar {
+  height: 6px; background: #E0D5C8; border-radius: 3px; margin-top: 8px; overflow: hidden;
+}
+.param-card .p-fill { height: 100%; border-radius: 3px; }
+
+/* ========== 条形图 ========== */
+.bar-chart { margin: 16px 0; }
+.bar-row { display: flex; align-items: center; margin-bottom: 10px; gap: 8px; }
+.bar-label { width: 130px; font-size: 12px; color: #5D4037; text-align: right; flex-shrink: 0; font-weight: 600; }
+.bar-track { flex: 1; height: 28px; background: #F5EDE3; border-radius: 6px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; color: #fff; font-weight: 600; transition: width 0.8s ease; }
+
+/* ========== 决策树SVG ========== */
+.svg-container { display: flex; justify-content: center; margin: 16px 0; overflow-x: auto; }
+.svg-container svg { max-width: 100%; height: auto; }
+
+/* ========== 流程图 ========== */
+.flow-steps { display: flex; flex-wrap: wrap; gap: 0; margin: 16px 0; align-items: stretch; }
+.flow-step {
+  flex: 1;
+  min-width: 180px;
+  background: #FFF;
+  border: 2px solid #D4A574;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  margin-right: 24px;
+}
+.flow-step:last-child { margin-right: 0; }
+.flow-step::after {
+  content: '→';
+  position: absolute;
+  right: -20px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #D4A574;
+  font-weight: 700;
+}
+.flow-step:last-child::after { display: none; }
+.flow-step .step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #6F4E37;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.flow-step .step-title { font-size: 14px; font-weight: 600; color: #3E2723; margin-bottom: 4px; }
+.flow-step .step-desc { font-size: 12px; color: #6D4C41; line-height: 1.5; }
+
+/* ========== 对比表 ========== */
+.diff-table th { background: #EFEBE9; }
+.diff-table .col-extreme { background: #FFF8E1; }
+.diff-table .col-compliant { background: #E8F5E9; }
+
+/* ========== 信息提示框 ========== */
+.info-box {
+  background: #F5EDE3;
+  border-left: 4px solid #6F4E37;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #5D4037;
+}
+.info-box.warning { border-left-color: #FF9800; background: #FFF8E1; }
+.info-box.danger { border-left-color: #F44336; background: #FFEBEE; }
+.info-box.success { border-left-color: #4CAF50; background: #E8F5E9; }
+
+/* ========== 挥发梯度色块 ========== */
+.gradient-bar {
+  display: flex;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+.gradient-segment {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: #fff;
+  transition: flex 0.5s;
+}
+
+/* ========== 底部 ========== */
+.report-footer {
+  text-align: center;
+  padding: 24px;
+  color: #8D6E63;
+  font-size: 12px;
+  border-top: 1px solid #E0D5C8;
+  margin-top: 20px;
+}
+sup { font-size: 10px; color: #D4A574; font-weight: 700; vertical-align: super; }
+
+/* ========== 风险等级 ========== */
+.risk-low { color: #4CAF50; font-weight: 600; }
+.risk-mid { color: #FF9800; font-weight: 600; }
+.risk-high { color: #F44336; font-weight: 600; }
+
+@media (max-width: 768px) {
+  .container { padding: 10px; }
+  .section { padding: 18px 16px; }
+  .flow-steps { flex-direction: column; }
+  .flow-step { margin-right: 0; margin-bottom: 16px; }
+  .flow-step::after { display: none; }
+  .bar-label { width: 90px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ========== 1. 报告头部 ========== -->
+<div class="report-header">
+  <h1>{{配方图标}} {{配方名称}} · {{场景简称}}配方报告</h1>
+  <div class="subtitle">{{配方名称英文}} — 从需求解析到配方落地的完整过程</div>
+  <div class="meta-tags">
+    <span class="meta-tag">📅 {{日期}}</span>
+    <span class="meta-tag">🔬 {{目标场景}}</span>
+    <span class="meta-tag">🎯 {{香型}}</span>
+    <span class="meta-tag">📋 交互序号 #{{交互序号}}</span>
+    <span class="meta-tag">📊 {{版本说明}}</span>
+  </div>
+</div>
+
+<!-- ========== 2. 需求分析与记忆调用 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">1</span>需求分析与记忆调用</div>
+
+  <div class="subsection-title">需求解析</div>
+  <table>
+    <tr><th style="width:140px;">需求维度</th><th>解析内容</th></tr>
+    <tr><td>目标场景</td><td>{{目标场景详细}}</td></tr>
+    <tr><td>目标香型</td><td>{{目标香型}}</td></tr>
+    <tr><td>关键诉求</td><td>{{关键诉求}}</td></tr>
+    <tr><td>输入信息</td><td>{{输入信息}}</td></tr>
+    <tr><td>输出版本</td><td>{{输出版本说明}}</td></tr>
+    <tr><td>合规标准</td><td>{{合规标准}}</td></tr>
+  </table>
+
+  <div class="subsection-title">用户偏好摘要（来自记忆库）</div>
+  <div class="info-box">
+    📌 {{偏好摘要说明}}。
+    检测到偏好：{{偏好详情}}。
+  </div>
+  {{若为首次交互则显示：📌 本次为首次交互，已为你建立调香记忆库 <code>.flavor-memory/</code>。后续每次配方都会沉淀知识，让我越来越懂你的需求。}}
+
+  <div class="subsection-title">本次调用的历史知识</div>
+  <div class="info-box success">
+    🔍 {{历史知识调用说明}}。
+  </div>
+  {{若首次交互则显示：🔍 首次交互，无历史知识可调用。本次沉淀的知识将在后续配方中自动应用。}}
+
+  <div class="knowledge-cards">
+    <!-- 历史知识卡片循环：type 可选 preference/monomer/pathway/compliance/atomization -->
+    <div class="k-card">
+      <span class="k-id">{{知识编号}}</span>
+      <div class="k-title">{{知识标题}}</div>
+      <div class="k-desc">{{知识描述}} <sup>[K{{知识序号}}]</sup></div>
+      <div class="k-source">来源：{{知识来源}}</div>
+    </div>
+    <!-- 知识卡片循环结束 -->
+  </div>
+</div>
+
+<!-- ========== 3. 配方设计过程（核心可视化章节） ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">2</span>配方设计过程</div>
+
+  <!-- 3.1 特征指纹选择决策 -->
+  <div class="subsection-title">3.1 特征指纹选择决策</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">{{香型}}香型的身份由核心特征指纹单体决定。以下为特征指纹选择的决策树：</p>
+
+  <div class="svg-container">
+    <!-- 决策树SVG：根据实际特征指纹选择过程绘制，保留此结构作为参考 -->
+    <svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#3E2723"/>
+          <stop offset="100%" style="stop-color:#6F4E37"/>
+        </linearGradient>
+      </defs>
+
+      <!-- 根节点 -->
+      <rect x="220" y="10" width="240" height="50" rx="10" fill="url(#g1)"/>
+      <text x="340" y="35" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">{{决策根节点标题}}</text>
+      <text x="340" y="50" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="11">{{决策根节点副标题}}</text>
+
+      <!-- 连接线 -->
+      <line x1="340" y1="60" x2="340" y2="80" stroke="#D4A574" stroke-width="2"/>
+
+      <!-- 第一层判断节点 -->
+      <rect x="250" y="80" width="180" height="40" rx="8" fill="#E8D5C0" stroke="#D4A574" stroke-width="1.5"/>
+      <text x="340" y="105" text-anchor="middle" fill="#3E2723" font-size="12" font-weight="600">{{第一层判断问题}}</text>
+
+      <!-- 分支线 -->
+      <line x1="280" y1="120" x2="160" y2="150" stroke="#D4A574" stroke-width="2"/>
+      <line x1="400" y1="120" x2="520" y2="150" stroke="#D4A574" stroke-width="2"/>
+
+      <!-- 左分支：入选 -->
+      <rect x="60" y="150" width="200" height="60" rx="8" fill="#4CAF50" opacity="0.15" stroke="#4CAF50" stroke-width="2"/>
+      <text x="160" y="172" text-anchor="middle" fill="#2E7D32" font-size="12" font-weight="700">✅ 选择：{{入选单体1}}</text>
+      <text x="160" y="188" text-anchor="middle" fill="#5D4037" font-size="10">{{入选单体1参数}}</text>
+      <text x="160" y="202" text-anchor="middle" fill="#5D4037" font-size="10">{{入选单体1理由}}</text>
+
+      <!-- 右分支：落选 -->
+      <rect x="420" y="150" width="200" height="60" rx="8" fill="#FF9800" opacity="0.12" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="520" y="172" text-anchor="middle" fill="#E65100" font-size="12" font-weight="600">✗ 放弃：{{落选单体1}}</text>
+      <text x="520" y="188" text-anchor="middle" fill="#5D4037" font-size="10">{{落选单体1说明}}</text>
+      <text x="520" y="202" text-anchor="middle" fill="#5D4037" font-size="10">{{落选单体1理由}}</text>
+
+      <!-- 后续分支按实际决策层级增加，保持相同风格 -->
+
+      <!-- 结论节点 -->
+      <rect x="180" y="380" width="320" height="34" rx="8" fill="url(#g1)"/>
+      <text x="340" y="401" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">特征指纹 = {{最终特征指纹组合}}</text>
+    </svg>
+  </div>
+
+  <!-- 3.2 香韵分路推导 -->
+  <div class="subsection-title">3.2 香韵分路推导过程（四步推导法）</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">基于动态分路推导引擎，根据{{香型}}的感官特征自主推导{{分路数量}}路体系：</p>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-title">特征路识别</div>
+      <div class="step-desc">
+        {{特征路识别过程}}<br>
+        → <b>{{特征路列表}}</b>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-title">基底路构建</div>
+      <div class="step-desc">
+        {{基底路构建过程}}<br>
+        → <b>{{基底路列表}}</b>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-title">修饰路补充</div>
+      <div class="step-desc">
+        {{修饰路补充过程}}<br>
+        → <b>{{修饰路列表}}</b>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-title">平衡校验</div>
+      <div class="step-desc">
+        {{平衡校验过程}}<br>
+        ✅ 无关键方向缺失<br>
+        ✅ 无冗余分路<br>
+        ✅ {{平衡校验结论}}
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <b>分路数量自适应说明：</b>{{分路数量自适应说明}} <sup>[K{{知识编号}}]</sup>
+  </div>
+
+  <!-- 3.3 挥发梯度设计 -->
+  <div class="subsection-title">3.3 挥发梯度设计</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:8px;">确保雾化出香层次分明：头香（第一印象）→ 体香（主体）→ 基香（持久度）</p>
+
+  <div class="gradient-bar">
+    <div class="gradient-segment" style="flex: {{头香flex}}; background: linear-gradient(90deg, #FFB74D, #FF9800);">头香 {{头香占比}}%</div>
+    <div class="gradient-segment" style="flex: {{体香flex}}; background: linear-gradient(90deg, #8D6E63, #6F4E37);">体香 {{体香占比}}%</div>
+    <div class="gradient-segment" style="flex: {{基香flex}}; background: linear-gradient(90deg, #5D4037, #3E2723);">基香 {{基香占比}}%</div>
+  </div>
+
+  <table style="margin-top:12px;">
+    <tr><th>梯度</th><th>挥发特性</th><th>关键组分</th><th>雾化行为</th></tr>
+    <tr><td><b>头香 {{头香占比}}%</b></td><td>{{头香挥发特性}}</td><td>{{头香组分}}</td><td>{{头香雾化行为}}</td></tr>
+    <tr><td><b>体香 {{体香占比}}%</b></td><td>{{体香挥发特性}}</td><td>{{体香组分}}</td><td>{{体香雾化行为}}</td></tr>
+    <tr><td><b>基香 {{基香占比}}%</b></td><td>{{基香挥发特性}}</td><td>{{基香组分}}</td><td>{{基香雾化行为}}</td></tr>
+  </table>
+
+  <!-- 3.4 OT值导向用量决策 -->
+  <div class="subsection-title">3.4 关键用量决策（OT值导向）</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:8px;">配方用量以感官阈值（OT值）为核心参考，而非简单峰面积比例。OT值越低 → 感官贡献越大 → 用量越少：</p>
+
+  <table>
+    <tr><th>组分</th><th>OT值(ppb)</th><th>极致版用量(‰)</th><th>感官贡献逻辑</th></tr>
+    <!-- 用量决策行循环 -->
+    <tr>
+      <td><b>{{组分名}}</b></td>
+      <td>{{OT值}}</td>
+      <td>{{用量}}</td>
+      <td>{{感官贡献逻辑}} <sup>[K{{知识编号}}]</sup></td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="info-box warning">
+    <b>OT值导向核心原则：</b>{{OT值导向原则说明}} <sup>[K{{知识编号}}]</sup>
+  </div>
+</div>
+
+<!-- ========== 4. 极致还原版配方 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">3</span>极致还原版配方</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">不考虑合规限制，追求最大感官还原度。<b style="color:#C62828;">仅供研发参考，不可直接量产。</b></p>
+
+  <table>
+    <tr><th>#</th><th>组分</th><th>CAS</th><th>类别</th><th>用量(‰)</th><th>功能层</th><th>OT(ppb)</th><th>合规</th></tr>
+    <!-- 极致版组分行循环 -->
+    <tr>
+      <td>{{序号}}</td>
+      <td>{{组分名称}}</td>
+      <td>{{CAS号}}</td>
+      <td>{{化学类别}}</td>
+      <td><b>{{用量}}</b></td>
+      <td>{{功能层}}</td>
+      <td>{{OT值}}</td>
+      <td><span class="tag {{合规标签类}}">{{合规状态}}</span></td>
+    </tr>
+    <!-- 行循环结束 -->
+    <!-- 禁用组分行（如有）使用红色背景：<tr style="background:#FFEBEE;"> -->
+    <tr><td>{{溶剂序号}}</td><td>丙二醇 (PG)</td><td>57-55-6</td><td>溶剂</td><td>{{PG用量}}</td><td>溶剂</td><td>—</td><td><span class="tag tag-ok">允许</span></td></tr>
+  </table>
+  <p style="font-size:14px; font-weight:700; color:#3E2723; margin-top:8px;">配方总计：1000.000‰ ｜ 香精组分 {{香精合计}}‰ + PG {{PG用量}}‰</p>
+</div>
+
+<!-- ========== 5. 香韵结构分析 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">4</span>香韵结构分析</div>
+
+  <div class="subsection-title">五层骨架拆解</div>
+  <table>
+    <tr><th>骨架层</th><th>角色</th><th>关键组分</th></tr>
+    <!-- 骨架行循环 -->
+    <tr>
+      <td><b>{{骨架层名}}</b></td>
+      <td>{{骨架角色}}</td>
+      <td>{{骨架关键组分}}</td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">香韵分路贡献度可视化</div>
+  <div class="bar-chart">
+    <!-- 分路条形图循环 -->
+    <div class="bar-row">
+      <div class="bar-label">{{分路编号}} {{分路名}}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:{{分路占比}}%; background:linear-gradient(90deg,{{分路色1}},{{分路色2}});">{{分路占比}}% · {{分路定位}}</div></div>
+    </div>
+    <!-- 循环结束 -->
+  </div>
+
+  <div class="info-box">
+    <b>关键洞察：</b>{{分路洞察说明}} <sup>[K{{知识编号}}]</sup>
+  </div>
+
+  <div class="subsection-title">特征指纹组分详解</div>
+  <table>
+    <tr><th>特征指纹</th><th>角色</th><th>OT值</th><th>用量</th><th>感官功能</th></tr>
+    <!-- 特征指纹行循环 -->
+    <tr>
+      <td><b>{{特征单体}}</b></td>
+      <td>{{角色}}</td>
+      <td>{{OT值}} ppb</td>
+      <td>{{用量}}‰</td>
+      <td>{{感官功能}}</td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+</div>
+
+<!-- ========== 6. 风格参数评估 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">5</span>风格参数评估</div>
+
+  <div class="param-grid">
+    <!-- 参数卡片循环 -->
+    <div class="param-card">
+      <div class="p-label">{{参数名}}</div>
+      <div class="p-value">{{参数值}}</div>
+      <div class="p-bar"><div class="p-fill" style="width:{{进度百分比}}%; background:{{进度色}};"></div></div>
+    </div>
+    <!-- 循环结束 -->
+  </div>
+
+  <table style="margin-top:16px;">
+    <tr><th>参数</th><th>目标值</th><th>实现方式</th></tr>
+    <!-- 参数实现方式行循环 -->
+    <tr>
+      <td>{{参数名}}</td>
+      <td>{{目标值}}</td>
+      <td>{{实现方式}} <sup>[K{{知识编号}}]</sup></td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+</div>
+
+<!-- ========== 7. 合规落地版配方 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">6</span>合规落地版配方</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">符合 {{合规标准}}，移除禁用组分，高风险组分控制在安全用量。<b style="color:#2E7D32;">可量产评估。</b></p>
+
+  <div class="subsection-title">双版本差异说明</div>
+  <table class="diff-table">
+    <tr><th>对比维度</th><th class="col-extreme">极致还原版</th><th class="col-compliant">合规落地版</th><th>差异说明</th></tr>
+    <!-- 差异行循环 -->
+    <tr>
+      <td><b>{{对比维度}}</b></td>
+      <td class="col-extreme">{{极致版情况}} <span class="tag {{标签类}}">{{标签}}</span></td>
+      <td class="col-compliant">{{合规版处理}} <span class="tag {{标签类}}">{{标签}}</span></td>
+      <td>{{差异说明}}</td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">合规版完整配方</div>
+  <table>
+    <tr><th>#</th><th>组分</th><th>CAS</th><th>用量(‰)</th><th>功能层</th><th>合规</th><th>与极致版差异</th></tr>
+    <!-- 合规版组分行循环 -->
+    <tr>
+      <td>{{序号}}</td>
+      <td>{{组分名称}}</td>
+      <td>{{CAS号}}</td>
+      <td><b>{{用量}}</b></td>
+      <td>{{功能层}}</td>
+      <td><span class="tag {{合规标签类}}">{{合规状态}}</span></td>
+      <td style="color:{{差异色}};">{{与极致版差异}}</td>
+    </tr>
+    <!-- 行循环结束 -->
+    <!-- 新增/替代组分行使用绿色背景：<tr style="background:#E8F5E9;"> -->
+    <tr><td>{{溶剂序号}}</td><td>丙二醇 (PG)</td><td>57-55-6</td><td>{{PG用量}}</td><td>溶剂</td><td><span class="tag tag-ok">允许</span></td><td>—</td></tr>
+  </table>
+  <p style="font-size:14px; font-weight:700; color:#3E2723; margin-top:8px;">配方总计：1000.000‰ ｜ 香精组分 {{合规版香精合计}}‰ + PG {{PG用量}}‰</p>
+</div>
+
+<!-- ========== 8. 合规审查报告 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">7</span>合规审查报告</div>
+  <p style="font-size:13px; color:#6D4C41; margin-bottom:12px;">适用标准：{{合规标准详细}}</p>
+
+  <div class="subsection-title">受限组分处理清单</div>
+  <table>
+    <tr><th>原组分</th><th>CAS</th><th>限值要求</th><th>极致版用量</th><th>合规版处理</th><th>替代方案</th></tr>
+    <!-- 受限组分行循环 -->
+    <tr>
+      <td><b>{{组分名}}</b></td>
+      <td>{{CAS号}}</td>
+      <td>{{限值要求}}</td>
+      <td>{{极致版用量}}</td>
+      <td><span class="tag {{处理标签类}}">{{合规处理}}</span></td>
+      <td>{{替代方案}}<br><span style="font-size:11px;color:#8D6E63;">{{替代感官说明}}</span></td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="info-box success">
+    <b>合规结论：</b>✅ {{合规结论}} <sup>[K{{知识编号}}]</sup>
+  </div>
+</div>
+
+<!-- ========== 9. 雾化工程化适配（电子雾化场景） ========== -->
+{{若为电子雾化场景则输出此章节，否则省略并注明"非雾化场景，本章省略"}}
+<div class="section">
+  <div class="section-title"><span class="icon">8</span>雾化工程化适配报告</div>
+
+  <div class="subsection-title">溶解度校验</div>
+  <table>
+    <tr><th>组分</th><th>PG溶解度</th><th>VG溶解度</th><th>风险</th><th>操作建议</th></tr>
+    <!-- 溶解度行循环 -->
+    <tr>
+      <td>{{组分名}}</td>
+      <td>{{PG溶解度}}</td>
+      <td>{{VG溶解度}}</td>
+      <td><span class="risk-{{风险类}}">{{风险等级}}</span></td>
+      <td>{{操作建议}} <sup>[K{{知识编号}}]</sup></td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">热稳定性评估</div>
+  <table>
+    <tr><th>组分</th><th>分解温度(°C)</th><th>雾化风险</th><th>产物风险</th><th>建议</th></tr>
+    <!-- 热稳定性行循环 -->
+    <tr>
+      <td>{{组分名}}</td>
+      <td>{{分解温度}}</td>
+      <td><span class="risk-{{风险类}}">{{雾化风险}}</span></td>
+      <td>{{产物风险}}</td>
+      <td>{{建议}}</td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">积碳风险评级</div>
+  <div class="bar-chart">
+    <!-- 积碳风险条形图循环 -->
+    <div class="bar-row">
+      <div class="bar-label" style="width:160px;">{{组分名}} ({{用量}})</div>
+      <div class="bar-track"><div class="bar-fill" style="width:{{风险百分比}}%; background:{{风险色}};">{{风险等级}}</div></div>
+    </div>
+    <!-- 循环结束 -->
+  </div>
+
+  <div class="subsection-title">体感优化建议</div>
+  <table>
+    <tr><th style="width:120px;">体感维度</th><th>评估</th><th>建议</th></tr>
+    <!-- 体感行循环 -->
+    <tr>
+      <td><b>{{维度}}</b></td>
+      <td>{{当前评估}}</td>
+      <td>{{优化建议}} <sup>[K{{知识编号}}]</sup></td>
+    </tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="info-box warning">
+    <b>量产风险提示：</b><br>
+    {{量产风险提示内容}} <sup>[K{{知识编号}}]</sup>
+  </div>
+</div>
+
+<!-- ========== 10. 使用建议与知识沉淀 ========== -->
+<div class="section">
+  <div class="section-title"><span class="icon">9</span>使用建议与知识沉淀</div>
+
+  <div class="subsection-title">最终推荐配方</div>
+  <div class="info-box success">
+    <b>推荐使用「合规落地版」进行量产评估。</b><br>
+    {{推荐说明}} <sup>[K{{知识编号}}]</sup>
+  </div>
+
+  <div class="subsection-title">工艺建议</div>
+  <table>
+    <tr><th style="width:120px;">工艺环节</th><th>建议</th></tr>
+    <!-- 工序行循环 -->
+    <tr><td>{{工艺环节}}</td><td>{{操作建议}} <sup>[K{{知识编号}}]</sup></td></tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">质控建议</div>
+  <table>
+    <tr><th>检测项</th><th>方法</th><th>标准</th></tr>
+    <!-- 质控行循环 -->
+    <tr><td>{{检测项}}</td><td>{{方法}}</td><td>{{标准}}</td></tr>
+    <!-- 行循环结束 -->
+  </table>
+
+  <div class="subsection-title">本次沉淀的新知识</div>
+  <div class="knowledge-cards">
+    <!-- 新沉淀知识卡片循环 -->
+    <div class="k-card">
+      <span class="k-id">{{知识编号}}</span>
+      <div class="k-title">{{知识标题}}</div>
+      <div class="k-desc">{{知识描述}}</div>
+      <div class="k-source">来源：{{日期}} / {{香型}} / {{场景}}</div>
+    </div>
+    <!-- 循环结束 -->
+  </div>
+  {{若无新知识则显示：本次交互未产生可沉淀的新通用知识，仅更新了配方档案与反馈日志。}}
+
+  <div class="info-box">
+    <b>记忆库更新：</b>{{记忆库更新说明}}
+  </div>
+</div>
+
+<!-- ========== 底部 ========== -->
+<div class="report-footer">
+  <p>{{配方图标}} {{配方名称}} · {{场景简称}}配方报告</p>
+  <p>生成日期：{{日期}} ｜ 交互序号：#{{交互序号}} ｜ 香韵大师 · 资深调香师</p>
+  <p style="margin-top:8px; color:#BCAAA4;">本报告由调香专家系统生成，配方数据仅供研发参考，正式投产前须进行安全评估与合规检测</p>
+</div>
+
+</div>
+</body>
+</html>
